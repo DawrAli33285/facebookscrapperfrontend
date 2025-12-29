@@ -25,7 +25,7 @@ const OrdersPage = () => {
         return;
       }
 
-      const response = await fetch(`${BASE_URL}/getAllOrders`, {
+      const response = await fetch(`${BASE_URL}/getAllFacebookOrders`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

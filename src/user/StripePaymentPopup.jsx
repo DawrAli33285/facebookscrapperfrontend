@@ -22,7 +22,7 @@ const CheckoutForm = ({ recordId,onSuccess, amount, recordCount, onClose }) => {
     try {
       // Create payment intent on backend
       let token = localStorage.getItem('token');
-      const response = await fetch(`${BASE_URL}/create-payment-intent`, {
+      const response = await fetch(`${BASE_URL}/create-facebookpayment-intent`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
