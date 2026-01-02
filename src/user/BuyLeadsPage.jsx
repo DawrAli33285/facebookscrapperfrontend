@@ -244,7 +244,7 @@ const UploadItemIdsPage = () => {
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-800">Enrich Item IDs</h1>
+              <h1 className="text-3xl font-bold text-gray-800">Enrich Seller IDs</h1>
               <p className="text-gray-600 mt-2">Upload your CSV or Excel file with Facebook listing item url to get enriched product and seller data</p>
             </div>
 
