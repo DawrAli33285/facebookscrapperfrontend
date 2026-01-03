@@ -78,12 +78,23 @@ const OrdersPage = () => {
     }
   };
 
-  const handlePaymentSuccess = (paymentIntentId) => {
-    toast.success('Payment successful! Your file is now ready for download.');
+  const handlePaymentSuccess = async (jobId) => {
+    console.log('Payment completed for job:', jobId);
+    
+    // Show success toast
+    toast.success('Payment successful! Your file is now ready for download.', {
+      autoClose: 3000
+    });
+    
+    // Close popup
     setShowPaymentPopup(false);
     setSelectedOrder(null);
+    
+    // Wait a moment for backend to process
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     // Refresh orders to get updated payment status
-    fetchOrders();
+    await fetchOrders();
   };
 
   const handleBuyMore = () => {
@@ -240,18 +251,18 @@ const OrdersPage = () => {
 
       {/* Payment Popup */}
       {selectedOrder && (
-        <StripePaymentPopup
-          recordId={selectedOrder.id}
-          isOpen={showPaymentPopup}
-          onClose={() => {
-            setShowPaymentPopup(false);
-            setSelectedOrder(null);
-          }}
-          onSuccess={handlePaymentSuccess}
-          amount={selectedOrder.total * 100} // Convert to cents
-          recordCount={selectedOrder.quantity}
-        />
-      )}
+  <StripePaymentPopup
+    recordId={selectedOrder.id}
+    isOpen={showPaymentPopup}
+    onClose={() => {
+      setShowPaymentPopup(false);
+      setSelectedOrder(null);
+    }}
+    onPaymentSuccess={handlePaymentSuccess}  // ✅ CORRECT PROP NAME
+    amount={selectedOrder.total * 100}
+    recordCount={selectedOrder.quantity}
+  />
+)}
     </>
   );
 };

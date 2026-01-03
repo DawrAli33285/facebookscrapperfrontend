@@ -9,7 +9,7 @@ function Sidebar() {
 
   const menuItems = [
     { id: 'upload', label: 'Upload', icon: Upload, path: '/dashboard' },
-    { id: 'files', label: 'Files', icon: FileText, path: '/orders' }
+    { id: 'files', label: 'History', icon: FileText, path: '/orders' }
   ];
 
   const handleNavigate = (path) => {

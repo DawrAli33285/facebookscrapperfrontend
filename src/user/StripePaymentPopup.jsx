@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { BASE_URL } from '../baseurl';
+import { toast,ToastContainer } from 'react-toastify';
 
 const stripePromise = loadStripe('pk_test_51OwuO4LcfLzcwwOYdssgGfUSfOgWT1LwO6ewi3CEPewY7WEL9ATqH6WJm3oAcLDA3IgUvVYLVEBMIEu0d8fUwhlw009JwzEYmV');
 
-const CheckoutForm = ({ recordId,onSuccess, amount, recordCount, onClose }) => {
+const CheckoutForm = ({ recordId, amount, recordCount, onClose, onPaymentSuccess }) => {
+  console.log("RECORD ID")
+  console.log(recordId)
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -44,10 +47,19 @@ const CheckoutForm = ({ recordId,onSuccess, amount, recordCount, onClose }) => {
         setError(stripeError.message);
         setIsProcessing(false);
       } else if (paymentIntent.status === 'succeeded') {
-        onSuccess(paymentIntent.id);
+        toast.success('Payment successful! Your file is now unlocked.', { 
+          containerId: 'uploadPage' 
+        });
+        
+        onClose();
+        
+        // Trigger success callback
+        if (onPaymentSuccess) {
+          onPaymentSuccess(recordId);
+        }
       }
     } catch (err) {
-        console.log(error.message)
+        console.log(err.message)
         console.log("ERROR IN POPUP IS")
       setError('Payment failed. Please try again.');
       setIsProcessing(false);
@@ -138,7 +150,7 @@ const CheckoutForm = ({ recordId,onSuccess, amount, recordCount, onClose }) => {
   );
 };
 
-const StripePaymentPopup = ({ recordId,isOpen, onClose, onSuccess, amount, recordCount }) => {
+const StripePaymentPopup = ({ recordId, isOpen, onClose, amount, recordCount, onPaymentSuccess }) => {
   if (!isOpen) return null;
 
   return (
@@ -148,13 +160,13 @@ const StripePaymentPopup = ({ recordId,isOpen, onClose, onSuccess, amount, recor
           Complete Payment
         </h2>
         <Elements stripe={stripePromise}>
-          <CheckoutForm 
-            onSuccess={onSuccess} 
-            amount={amount} 
-            recordId={recordId}
-            recordCount={recordCount}
-            onClose={onClose}
-          />
+        <CheckoutForm 
+  amount={amount} 
+  recordId={recordId}
+  recordCount={recordCount}
+  onClose={onClose}
+  onPaymentSuccess={onPaymentSuccess}
+/>
         </Elements>
       </div>
     </div>
